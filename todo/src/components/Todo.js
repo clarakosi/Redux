@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { addTodo, toggleComplete } from '../Actions/index';
+import { addTodo, toggleComplete, deleteTodo } from '../Actions/index';
+import './Todo.css'
 
 class Todo extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            text: '',
-            id: '',
+            text: ''
         }
     }
 
@@ -22,9 +22,14 @@ class Todo extends Component {
         this.setState({text: ''})
     }
 
-    completeToggle = () => {
-        console.log(this.props.todos);
+    completeToggle = (id) => {
+        this.props.toggleComplete(id);
     }
+
+    deleteTodo = id => {
+        this.props.deleteTodo(id);
+    }
+    
 
     render() {
         return (
@@ -32,9 +37,12 @@ class Todo extends Component {
                 <form onSubmit={this.addTask}>
                     <input value={this.state.text} onChange={this.inputHandler} placeholder="Add task"/>
                 </form>
-                <ul>
+                <ul className="tasks">
                     {this.props.todos.map(task => {
-                        return <li key={task.id} onClick={this.completeToggle()} style={this.pr}>{task.text}</li>
+                        return <div className="tasks--list" key={task.id} style={task.delete ? {display: 'none'} : null}>
+                        <li style={task.completed ? {textDecoration: 'line-through'} : null} onClick={() =>this.completeToggle(task.id)}>{task.text}</li>
+                        <button onClick={() => this.deleteTodo(task.id)}>x</button>
+                        </div>
                     })}
                 </ul>
             </div>
@@ -49,4 +57,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, { addTodo, toggleComplete }) (Todo);
+export default connect(mapStateToProps, { addTodo, toggleComplete, deleteTodo }) (Todo);
