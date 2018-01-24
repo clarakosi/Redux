@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { addTodo, toggleComplete, deleteTodo } from '../Actions/index';
+import { addTodo, toggleComplete, deleteTodo, getTodos } from '../Actions/index';
 import './Todo.css'
 
 class Todo extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            text: ''
+            text: '',
         }
     }
 
@@ -29,7 +29,20 @@ class Todo extends Component {
     deleteTodo = id => {
         this.props.deleteTodo(id);
     }
-    
+
+    componentDidMount() {
+        // check if todos exists in localStorage?
+        // if todos exists in localStorage
+        // dispatch a getTodos action, that sets the initial state of our todos
+        const todos = JSON.parse(localStorage.getItem('todos'))
+        if(todos) {
+            this.props.getTodos(todos)
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.todos !== this.props.todos) return localStorage.setItem('todos', JSON.stringify(nextProps.todos));
+    }
 
     render() {
         return (
@@ -57,4 +70,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, { addTodo, toggleComplete, deleteTodo }) (Todo);
+export default connect(mapStateToProps, { addTodo, toggleComplete, deleteTodo, getTodos }) (Todo);

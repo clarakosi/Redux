@@ -1,4 +1,4 @@
-import { ADD_TODO, TOGGLE_COMPLETE, DELETE_TODO } from '../Actions/index'
+import { ADD_TODO, TOGGLE_COMPLETE, DELETE_TODO, GET_TODOS } from '../Actions/index'
 
 let id = -1;
 
@@ -9,7 +9,9 @@ export default (todos = [], action) => {
         case TOGGLE_COMPLETE:
             return todos.map((todo) => todo.id === action.payload ? {...todo, completed: !todo.completed} : todo);
         case DELETE_TODO:
-            return todos.map(todo => todo.id ===action.payload ? {...todo, delete: !todo.delete}: todo)
+            return todos.map(todo => todo.id ===action.payload ? {...todo, delete: !todo.delete}: todo);
+        case GET_TODOS:
+            return action.payload;
         default: 
             return todos;
     }
